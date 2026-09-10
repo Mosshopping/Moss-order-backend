@@ -1,0 +1,16 @@
+{
+  "name": "moss-order-backend",
+  "version": "1.0.0",
+  "description": "Принимает заказы из Telegram Mini App MOSS и пересылает их владельцу",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
