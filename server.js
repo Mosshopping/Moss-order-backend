@@ -19,6 +19,27 @@ if (!OWNER_CHAT_ID) {
 }
 
 const TG_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
+const MINI_APP_URL = process.env.MINI_APP_URL || "https://mosshopping.github.io/Moss-mini-app/moss-mini-app.html";
+
+async function sendStartMenu(chatId) {
+  const res = await fetch(`${TG_API}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "Добро пожаловать в MOSS 🌸 Нажмите кнопку ниже, чтобы открыть каталог и оформить заказ.",
+      reply_markup: {
+        keyboard: [
+          [{ text: "🛍️ Открыть каталог", web_app: { url: MINI_APP_URL } }],
+        ],
+        resize_keyboard: true,
+      },
+    }),
+  });
+  if (!res.ok) {
+    console.error("Ошибка sendStartMenu:", res.status, await res.text());
+  }
+}
 
 async function sendMessage(chatId, text) {
   const res = await fetch(`${TG_API}/sendMessage`, {
@@ -92,7 +113,7 @@ app.post("/webhook", async (req, res) => {
       // Подтверждение самому клиенту в чат с ботом
       await sendMessage(msg.chat.id, "Спасибо! Заявка получена, мы свяжемся с вами в течение пары часов 🌸");
     } else if (msg && msg.text === "/start") {
-      await sendMessage(msg.chat.id, "Добро пожаловать в MOSS 🌸 Нажмите кнопку меню, чтобы открыть каталог.");
+      await sendStartMenu(msg.chat.id);
     }
   } catch (err) {
     console.error("Ошибка обработки обновления:", err);
